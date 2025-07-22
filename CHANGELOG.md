@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Project structure and configuration files
 - Documentation templates
 - Development guidelines
+- New `onValueChange` option for `useHistoryState`: pass a callback to be called after each setState (not on undo/redo/reset/clear/goToIndex).
 
 ## [1.0.0] - TBD
 

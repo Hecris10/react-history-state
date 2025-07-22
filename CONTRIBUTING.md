@@ -78,6 +78,7 @@ interface StateHistoryOptions {
   readonly maxHistory?: number;
   readonly debounceMs?: number;
   readonly enableRedo?: boolean;
+  readonly onValueChange?: (value: T) => void;
 }
 
 export function useHistoryState<T>(
@@ -343,6 +344,7 @@ docs(readme): update API documentation with new options
 3. **Run checks**: Ensure all linting and tests pass
 4. **Update changelog**: Add entry to CHANGELOG.md
 5. **Fill PR template**: Provide clear description of changes
+- [ ] If you add a new option to useHistoryState, document it in README and DEVELOPMENT_GUIDE.
 
 ### Code Review Guidelines
 

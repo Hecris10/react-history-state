@@ -1,7 +1,7 @@
 /**
  * Configuration options for useStateHistory hook
  */
-export interface StateHistoryOptions {
+export interface StateHistoryOptions<T = unknown> {
   /**
    * Maximum number of history entries to keep
    * @default 50
@@ -19,6 +19,12 @@ export interface StateHistoryOptions {
    * @default true
    */
   readonly enableRedo?: boolean;
+
+  /**
+   * Optional callback called after each state change
+   * Receives the new value of type T
+   */
+  readonly onValueChange?: (value: T) => void;
 }
 
 /**
@@ -88,10 +94,10 @@ export interface HistoryState<T> {
 /**
  * History manager actions
  */
-export type HistoryAction<T> = 
+export type HistoryAction<T> =
   | { type: 'SET_STATE'; payload: T }
   | { type: 'UNDO' }
   | { type: 'REDO' }
   | { type: 'RESET' }
   | { type: 'CLEAR' }
-  | { type: 'GO_TO_INDEX'; payload: number }; 
+  | { type: 'GO_TO_INDEX'; payload: number };

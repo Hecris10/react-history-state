@@ -200,6 +200,65 @@ describe('useHistoryState', () => {
     });
   });
 
+  describe('onValueChange option', () => {
+    it('should call onValueChange after setState (immediate)', () => {
+      const onValueChange = jest.fn();
+      const { result } = renderHook(() => useHistoryState<string>('init', { onValueChange }));
+
+      act(() => {
+        result.current.setState('foo');
+      });
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+      expect(onValueChange).toHaveBeenCalledWith('foo');
+
+      act(() => {
+        result.current.setState('bar');
+      });
+      expect(onValueChange).toHaveBeenCalledTimes(2);
+      expect(onValueChange).toHaveBeenLastCalledWith('bar');
+    });
+
+    it('should call onValueChange after setState (debounced)', () => {
+      jest.useFakeTimers();
+      const onValueChange = jest.fn();
+      const { result } = renderHook(() =>
+        useHistoryState<string>('init', { debounceMs: 100, onValueChange })
+      );
+
+      act(() => {
+        result.current.setState('foo');
+        result.current.setState('bar');
+      });
+      expect(onValueChange).not.toHaveBeenCalled();
+      act(() => {
+        jest.advanceTimersByTime(100);
+      });
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+      expect(onValueChange).toHaveBeenCalledWith('bar');
+      jest.useRealTimers();
+    });
+
+    it('should not call onValueChange on undo/redo/reset/clear/goToIndex', () => {
+      const onValueChange = jest.fn();
+      const { result } = renderHook(() => useHistoryState<string>('init', { onValueChange }));
+
+      act(() => {
+        result.current.setState('foo');
+      });
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+
+      act(() => {
+        result.current.undo();
+        result.current.redo();
+        result.current.reset();
+        result.current.clear();
+        result.current.goToIndex(0);
+      });
+      // Should still only be called for setState
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('complex state', () => {
     interface TestState {
       name: string;

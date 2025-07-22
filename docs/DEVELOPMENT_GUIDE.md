@@ -115,9 +115,11 @@ export interface StateHistoryResult<T> {
 }
 
 // Use optional properties with defaults
-export interface StateHistoryOptions {
+export interface StateHistoryOptions<T = unknown> {
   readonly maxHistory?: number; // Default: 50
   readonly debounceMs?: number; // Default: 0
+  readonly enableRedo?: boolean; // Default: true
+  readonly onValueChange?: (value: T) => void; // Called after setState, not on undo/redo/reset/clear/goToIndex
 }
 ```
 

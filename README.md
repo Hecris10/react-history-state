@@ -89,6 +89,7 @@ interface Options {
   maxHistory?: number; // Maximum history entries (default: 50)
   debounceMs?: number; // Debounce state changes (default: 0)
   enableRedo?: boolean; // Enable redo functionality (default: true)
+  onValueChange?: (value: T) => void; // Optional callback after each setState
 }
 ```
 
@@ -168,7 +169,10 @@ function TextEditor() {
   const { state, setState, undo, redo, canUndo, canRedo } = useHistoryState('', {
     maxHistory: 100,        // Keep up to 100 history entries
     debounceMs: 300,        // Debounce rapid changes by 300ms
-    enableRedo: true        // Enable redo functionality
+    enableRedo: true,       // Enable redo functionality
+    onValueChange: (val) => {
+      console.log('State changed to:', val);
+    },
   });
 
   return (
