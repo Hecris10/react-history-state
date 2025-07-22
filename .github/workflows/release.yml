@@ -153,14 +153,15 @@ jobs:
 
       - name: 🏷️ Create Git tag
         if: steps.check-version.outputs.version-exists == 'false' && github.event_name != 'release'
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           VERSION=$(jq -r '.version' package.json)
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git tag "v$VERSION"
+          git config --global url."https://x-access-token:${GH_PAT}@github.com/".insteadOf "https://github.com/"
           git push origin "v$VERSION"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # Create GitHub release if published from version bump
   create-release:
