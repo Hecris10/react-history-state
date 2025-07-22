@@ -1,6 +1,6 @@
-# Contributing to react-state-history
+# Contributing to react-history-state
 
-Thank you for your interest in contributing to react-state-history! This
+Thank you for your interest in contributing to react-history-state! This
 document provides guidelines and patterns that all contributors should follow.
 
 ## Development Setup
@@ -16,8 +16,8 @@ document provides guidelines and patterns that all contributors should follow.
 1. Fork the repository on GitHub
 2. Clone your fork locally:
    ```bash
-   git clone https://github.com/yourusername/react-state-history.git
-   cd react-state-history
+   git clone https://github.com/yourusername/react-history-state.git
+   cd react-history-state
    ```
 3. Install dependencies:
    ```bash
@@ -33,10 +33,10 @@ document provides guidelines and patterns that all contributors should follow.
 ### Directory Structure
 
 ```
-react-state-history/
+react-history-state/
 ├── src/                    # Source code
 │   ├── hooks/             # React hooks
-│   │   ├── useStateHistory.ts
+│   │   ├── useHistoryState.ts
 │   │   └── index.ts
 │   ├── types/             # TypeScript type definitions
 │   │   └── index.ts
@@ -74,7 +74,7 @@ interface StateHistoryOptions {
   readonly enableRedo?: boolean;
 }
 
-export function useStateHistory<T>(
+export function useHistoryState<T>(
   initialState: T,
   options: StateHistoryOptions = {}
 ): StateHistoryResult<T> {
@@ -82,7 +82,7 @@ export function useStateHistory<T>(
 }
 
 // ❌ Bad - Never use any
-export function useStateHistory(initialState: any, options?: any) {
+export function useHistoryState(initialState: any, options?: any) {
   // implementation
 }
 
@@ -110,7 +110,7 @@ const someValue = JSON.parse(jsonString) as ExpectedShape;
 
 ```typescript
 // ✅ Good - Proper hook structure
-export function useStateHistory<T>(
+export function useHistoryState<T>(
   initialState: T,
   options: StateHistoryOptions = {}
 ): StateHistoryResult<T> {
@@ -190,7 +190,7 @@ const addToHistory = useCallback(
 
 ```typescript
 // ✅ Good test structure
-describe('useStateHistory', () => {
+describe('useHistoryState', () => {
   describe('basic functionality', () => {
     it('should initialize with initial state', () => {
       // test implementation
@@ -231,7 +231,7 @@ export const renderHookWithHistory = <T>(
   initialState: T,
   options?: StateHistoryOptions
 ) => {
-  return renderHook(() => useStateHistory(initialState, options));
+  return renderHook(() => useHistoryState(initialState, options));
 };
 ```
 
@@ -244,7 +244,7 @@ export const renderHookWithHistory = <T>(
 
 ```typescript
 // ✅ Good error handling
-export function useStateHistory<T>(
+export function useHistoryState<T>(
   initialState: T,
   options: StateHistoryOptions = {}
 ): StateHistoryResult<T> {
@@ -279,10 +279,10 @@ export function useStateHistory<T>(
  *
  * @example
  * ```tsx
- * const { state, setState, undo, redo } = useStateHistory('initial');
+ * const { state, setState, undo, redo } = useHistoryState('initial');
  * ```
  */
-export function useStateHistory<T>(
+export function useHistoryState<T>(
   initialState: T,
   options: StateHistoryOptions = {}
 ): StateHistoryResult<T> {
@@ -325,7 +325,7 @@ Types:
 Examples:
 
 ```
-feat(hooks): add debouncing support to useStateHistory
+feat(hooks): add debouncing support to useHistoryState
 fix(utils): handle edge case in history management
 docs(readme): update API documentation with new options
 ```

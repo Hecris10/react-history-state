@@ -1,4 +1,4 @@
-# Development Guide for react-state-history
+# Development Guide for react-history-state
 
 This guide provides detailed information about the project architecture,
 patterns, and development practices for Cursor IDE and developers.
@@ -7,7 +7,7 @@ patterns, and development practices for Cursor IDE and developers.
 
 ### Core Components
 
-1. **useStateHistory Hook** (`src/hooks/useStateHistory.ts`)
+1. **useHistoryState Hook** (`src/hooks/useHistoryState.ts`)
    - Main API entry point
    - Handles React state management and lifecycle
    - Integrates with history manager utility
@@ -83,11 +83,11 @@ import { createHistoryManager } from '../utils';
 
 ```typescript
 // Named exports preferred
-export { useStateHistory } from './hooks';
+export { useHistoryState } from './hooks';
 export type { StateHistoryOptions } from './types';
 
 // Barrel exports in index files
-export { useStateHistory } from './useStateHistory';
+export { useHistoryState } from './useHistoryState';
 ```
 
 ## TypeScript Patterns
@@ -96,7 +96,7 @@ export { useStateHistory } from './useStateHistory';
 
 ```typescript
 // Use proper generic constraints
-export function useStateHistory<T>(
+export function useHistoryState<T>(
   initialState: T,
   options: StateHistoryOptions = {}
 ): StateHistoryResult<T> {
@@ -135,7 +135,7 @@ function isValidHistoryIndex(index: number, length: number): boolean {
 ### Hook Structure
 
 ```typescript
-export function useStateHistory<T>(
+export function useHistoryState<T>(
   initialState: T,
   options: StateHistoryOptions = {}
 ): StateHistoryResult<T> {
@@ -208,18 +208,18 @@ return useMemo(
 
 ```typescript
 import { renderHook, act } from '@testing-library/react-hooks';
-import { useStateHistory } from '../useStateHistory';
+import { useHistoryState } from '../useHistoryState';
 
-describe('useStateHistory', () => {
+describe('useHistoryState', () => {
   it('should initialize with correct state', () => {
-    const { result } = renderHook(() => useStateHistory('initial'));
+    const { result } = renderHook(() => useHistoryState('initial'));
 
     expect(result.current.state).toBe('initial');
     expect(result.current.canUndo).toBe(false);
   });
 
   it('should handle state updates', () => {
-    const { result } = renderHook(() => useStateHistory('initial'));
+    const { result } = renderHook(() => useHistoryState('initial'));
 
     act(() => {
       result.current.setState('updated');
@@ -309,7 +309,7 @@ const undo = useCallback(() => {
 
 ```typescript
 const FormWithHistory = () => {
-  const { state, setState, undo, redo } = useStateHistory({
+  const { state, setState, undo, redo } = useHistoryState({
     name: '',
     email: ''
   });

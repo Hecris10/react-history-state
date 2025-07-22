@@ -1,6 +1,6 @@
-# react-state-history
+# react-history-state
 
-[![npm version](https://badge.fury.io/js/react-state-history.svg)](https://www.npmjs.com/package/react-state-history)
+[![npm version](https://badge.fury.io/js/react-history-state.svg)](https://www.npmjs.com/package/react-history-state)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -20,19 +20,19 @@ A lightweight React library that provides state management with built-in undo an
 
 ```bash
 # Using pnpm (recommended)
-pnpm add react-state-history
+pnpm add react-history-state
 
 # Using npm
-npm install react-state-history
+npm install react-history-state
 
 # Using yarn
-yarn add react-state-history
+yarn add react-history-state
 ```
 
 ## Quick Start
 
 ```tsx
-import { useStateHistory } from 'react-state-history';
+import { useHistoryState } from 'react-history-state';
 
 function MyComponent() {
   const {
@@ -44,27 +44,27 @@ function MyComponent() {
     canRedo,
     history,
     reset
-  } = useStateHistory('initial value');
+  } = useHistoryState('initial value');
 
   return (
     <div>
-      <input 
-        value={state} 
-        onChange={(e) => setState(e.target.value)} 
+      <input
+        value={state}
+        onChange={(e) => setState(e.target.value)}
       />
-      
+
       <button onClick={undo} disabled={!canUndo}>
         Undo
       </button>
-      
+
       <button onClick={redo} disabled={!canRedo}>
         Redo
       </button>
-      
+
       <button onClick={reset}>
         Reset
       </button>
-      
+
       <p>History length: {history.length}</p>
     </div>
   );
@@ -73,7 +73,7 @@ function MyComponent() {
 
 ## API Reference
 
-### `useStateHistory<T>(initialState: T, options?: Options)`
+### `useHistoryState<T>(initialState: T, options?: Options)`
 
 The main hook that provides state management with history capabilities.
 
@@ -121,7 +121,7 @@ interface FormData {
 }
 
 function FormComponent() {
-  const { state, setState, undo, redo, canUndo, canRedo } = useStateHistory<FormData>({
+  const { state, setState, undo, redo, canUndo, canRedo } = useHistoryState<FormData>({
     name: '',
     email: '',
     age: 0
@@ -137,17 +137,17 @@ function FormComponent() {
 
   return (
     <form>
-      <input 
-        value={state.name} 
-        onChange={(e) => updateName(e.target.value)} 
+      <input
+        value={state.name}
+        onChange={(e) => updateName(e.target.value)}
         placeholder="Name"
       />
-      <input 
-        value={state.email} 
-        onChange={(e) => updateEmail(e.target.value)} 
+      <input
+        value={state.email}
+        onChange={(e) => updateEmail(e.target.value)}
         placeholder="Email"
       />
-      
+
       <div>
         <button type="button" onClick={undo} disabled={!canUndo}>
           Undo
@@ -165,7 +165,7 @@ function FormComponent() {
 
 ```tsx
 function TextEditor() {
-  const { state, setState, undo, redo, canUndo, canRedo } = useStateHistory('', {
+  const { state, setState, undo, redo, canUndo, canRedo } = useHistoryState('', {
     maxHistory: 100,        // Keep up to 100 history entries
     debounceMs: 300,        // Debounce rapid changes by 300ms
     enableRedo: true        // Enable redo functionality
@@ -173,13 +173,13 @@ function TextEditor() {
 
   return (
     <div>
-      <textarea 
-        value={state} 
-        onChange={(e) => setState(e.target.value)} 
+      <textarea
+        value={state}
+        onChange={(e) => setState(e.target.value)}
         rows={10}
         cols={50}
       />
-      
+
       <div>
         <button onClick={undo} disabled={!canUndo}>
           Undo (Ctrl+Z)
@@ -197,10 +197,10 @@ function TextEditor() {
 
 ```tsx
 import { useEffect } from 'react';
-import { useStateHistory } from 'react-state-history';
+import { useHistoryState } from 'react-history-state';
 
 function ComponentWithKeyboardShortcuts() {
-  const { state, setState, undo, redo, canUndo, canRedo } = useStateHistory('');
+  const { state, setState, undo, redo, canUndo, canRedo } = useHistoryState('');
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -220,9 +220,9 @@ function ComponentWithKeyboardShortcuts() {
   }, [undo, redo, canUndo, canRedo]);
 
   return (
-    <textarea 
-      value={state} 
-      onChange={(e) => setState(e.target.value)} 
+    <textarea
+      value={state}
+      onChange={(e) => setState(e.target.value)}
     />
   );
 }
@@ -273,4 +273,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes. 
+See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes.

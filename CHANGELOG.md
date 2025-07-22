@@ -16,9 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - TBD
 
 ### Added
-- Initial release of react-state-history
-- `useStateHistory` hook for state management with undo/redo
+- Initial release of react-history-state
+- `useHistoryState` hook for state management with undo/redo
 - TypeScript support with full type safety
 - Configurable options (maxHistory, debounceMs, enableRedo)
 - Comprehensive test coverage
-- Documentation and examples 
+- Documentation and examples

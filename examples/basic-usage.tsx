@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStateHistory } from '../src';
+import { useHistoryState } from '../src';
 
 /**
  * Basic text input example with undo/redo functionality
@@ -15,7 +15,7 @@ export function BasicTextInput(): JSX.Element {
     history,
     reset,
     clear
-  } = useStateHistory('Hello World!');
+  } = useHistoryState('Hello World!');
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
@@ -138,7 +138,7 @@ export function FormExample(): JSX.Element {
     }
   };
 
-  const { state, setState, undo, redo, canUndo, canRedo } = useStateHistory(
+  const { state, setState, undo, redo, canUndo, canRedo } = useHistoryState(
     initialFormData,
     { maxHistory: 20, debounceMs: 300 } // Debounce rapid changes
   );

@@ -1,4 +1,4 @@
-// Main entry point for react-state-history library
-export { useStateHistory } from './hooks';
+// Main entry point for react-history-state library
+export { useHistoryState } from './hooks';
 export type { StateHistoryOptions, StateHistoryResult } from './types';
 export { createHistoryManager } from './utils';

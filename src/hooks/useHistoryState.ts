@@ -12,10 +12,10 @@ import { createHistoryManager } from '../utils';
  *
  * @example
  * ```tsx
- * const { state, setState, undo, redo } = useStateHistory('initial');
+ * const { state, setState, undo, redo } = useHistoryState('initial');
  * ```
  */
-export function useStateHistory<T>(
+export function useHistoryState<T>(
   initialState: T,
   options: StateHistoryOptions = {}
 ): StateHistoryResult<T> {

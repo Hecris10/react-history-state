@@ -1,10 +1,10 @@
 import { act, renderHook } from '@testing-library/react-hooks';
-import { useStateHistory } from '../../src/hooks/useStateHistory';
+import { useHistoryState } from '../../src/hooks/useHistoryState';
 
-describe('useStateHistory', () => {
+describe('useHistoryState', () => {
   describe('basic functionality', () => {
     it('should initialize with correct state', () => {
-      const { result } = renderHook(() => useStateHistory('initial'));
+      const { result } = renderHook(() => useHistoryState('initial'));
 
       expect(result.current.state).toBe('initial');
       expect(result.current.canUndo).toBe(false);
@@ -13,7 +13,7 @@ describe('useStateHistory', () => {
     });
 
     it('should update state correctly', () => {
-      const { result } = renderHook(() => useStateHistory('initial'));
+      const { result } = renderHook(() => useHistoryState('initial'));
 
       act(() => {
         result.current.setState('updated');
@@ -26,7 +26,7 @@ describe('useStateHistory', () => {
     });
 
     it('should handle function updates', () => {
-      const { result } = renderHook(() => useStateHistory(0));
+      const { result } = renderHook(() => useHistoryState(0));
 
       act(() => {
         result.current.setState(prev => prev + 1);
@@ -37,7 +37,7 @@ describe('useStateHistory', () => {
     });
 
     it('should undo to previous state', () => {
-      const { result } = renderHook(() => useStateHistory('initial'));
+      const { result } = renderHook(() => useHistoryState('initial'));
 
       act(() => {
         result.current.setState('updated');
@@ -53,7 +53,7 @@ describe('useStateHistory', () => {
     });
 
     it('should redo to next state', () => {
-      const { result } = renderHook(() => useStateHistory('initial'));
+      const { result } = renderHook(() => useHistoryState('initial'));
 
       act(() => {
         result.current.setState('updated');
@@ -73,7 +73,7 @@ describe('useStateHistory', () => {
     });
 
     it('should reset to initial state', () => {
-      const { result } = renderHook(() => useStateHistory('initial'));
+      const { result } = renderHook(() => useHistoryState('initial'));
 
       act(() => {
         result.current.setState('updated1');
@@ -91,7 +91,7 @@ describe('useStateHistory', () => {
     });
 
     it('should clear history', () => {
-      const { result } = renderHook(() => useStateHistory('initial'));
+      const { result } = renderHook(() => useHistoryState('initial'));
 
       act(() => {
         result.current.setState('updated1');
@@ -109,7 +109,7 @@ describe('useStateHistory', () => {
     });
 
     it('should go to specific index', () => {
-      const { result } = renderHook(() => useStateHistory('initial'));
+      const { result } = renderHook(() => useHistoryState('initial'));
 
       act(() => {
         result.current.setState('updated1');
@@ -129,7 +129,7 @@ describe('useStateHistory', () => {
 
   describe('options', () => {
     it('should respect maxHistory option', () => {
-      const { result } = renderHook(() => useStateHistory('initial', { maxHistory: 3 }));
+      const { result } = renderHook(() => useHistoryState('initial', { maxHistory: 3 }));
 
       act(() => {
         result.current.setState('state1');
@@ -144,7 +144,7 @@ describe('useStateHistory', () => {
 
     it('should handle debouncing', () => {
       jest.useFakeTimers();
-      const { result } = renderHook(() => useStateHistory('initial', { debounceMs: 100 }));
+      const { result } = renderHook(() => useHistoryState('initial', { debounceMs: 100 }));
 
       act(() => {
         result.current.setState('rapid1');
@@ -167,7 +167,7 @@ describe('useStateHistory', () => {
     });
 
     it('should disable redo when enableRedo is false', () => {
-      const { result } = renderHook(() => useStateHistory('initial', { enableRedo: false }));
+      const { result } = renderHook(() => useHistoryState('initial', { enableRedo: false }));
 
       act(() => {
         result.current.setState('updated');
@@ -190,10 +190,10 @@ describe('useStateHistory', () => {
     it('should validate options', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      const { result: result1 } = renderHook(() => useStateHistory('initial', { maxHistory: 0 }));
+      const { result: result1 } = renderHook(() => useHistoryState('initial', { maxHistory: 0 }));
       expect(result1.error).toEqual(Error('maxHistory must be a positive number'));
 
-      const { result: result2 } = renderHook(() => useStateHistory('initial', { debounceMs: -1 }));
+      const { result: result2 } = renderHook(() => useHistoryState('initial', { debounceMs: -1 }));
       expect(result2.error).toEqual(Error('debounceMs must be a non-negative number'));
 
       consoleError.mockRestore();
@@ -214,7 +214,7 @@ describe('useStateHistory', () => {
         items: [],
       };
 
-      const { result } = renderHook(() => useStateHistory(initialState));
+      const { result } = renderHook(() => useHistoryState(initialState));
 
       act(() => {
         result.current.setState({
@@ -238,7 +238,7 @@ describe('useStateHistory', () => {
     });
 
     it('should handle partial updates with function', () => {
-      const { result } = renderHook(() => useStateHistory({ count: 0, name: 'test' }));
+      const { result } = renderHook(() => useHistoryState({ count: 0, name: 'test' }));
 
       act(() => {
         result.current.setState(prev => ({ ...prev, count: prev.count + 1 }));
@@ -256,7 +256,7 @@ describe('useStateHistory', () => {
 
   describe('edge cases', () => {
     it('should handle multiple rapid undo/redo operations', () => {
-      const { result } = renderHook(() => useStateHistory('initial'));
+      const { result } = renderHook(() => useHistoryState('initial'));
 
       // Create some history
       act(() => {
@@ -289,7 +289,7 @@ describe('useStateHistory', () => {
     });
 
     it('should clear redo stack on new state after undo', () => {
-      const { result } = renderHook(() => useStateHistory('initial'));
+      const { result } = renderHook(() => useHistoryState('initial'));
 
       act(() => {
         result.current.setState('state1');
@@ -311,7 +311,7 @@ describe('useStateHistory', () => {
     });
 
     it('should handle invalid goToIndex values', () => {
-      const { result } = renderHook(() => useStateHistory('initial'));
+      const { result } = renderHook(() => useHistoryState('initial'));
 
       act(() => {
         result.current.setState('state1');
