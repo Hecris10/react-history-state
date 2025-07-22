@@ -15,6 +15,9 @@ concurrency:
   group: release
   cancel-in-progress: false
 
+permissions:
+  contents: write
+
 jobs:
   # Comprehensive testing before release
   test-before-release:
