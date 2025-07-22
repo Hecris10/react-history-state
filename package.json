@@ -31,16 +31,16 @@
     "typescript",
     "hook"
   ],
-  "author": "Your Name",
+  "author": "Helaman Ewerton <ewerton.webdev@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/react-history-state.git"
+    "url": "https://github.com/Hecris10/react-history-state.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/react-history-state/issues"
+    "url": "https://github.com/Hecris10/react-history-state/issues"
   },
-  "homepage": "https://github.com/yourusername/react-history-state#readme",
+  "homepage": "https://github.com/Hecris10/react-history-state#readme",
   "peerDependencies": {
     "react": ">=16.8.0"
   },

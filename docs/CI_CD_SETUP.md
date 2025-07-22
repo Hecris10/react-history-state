@@ -141,9 +141,9 @@ Include administrators: ✅
 Add these badges to your README:
 
 ```markdown
-[![Tests](https://github.com/yourusername/react-history-state/workflows/🔍%20Pull%20Request%20Checks/badge.svg)](https://github.com/yourusername/react-history-state/actions)
-[![Security](https://github.com/yourusername/react-history-state/workflows/🔒%20Security%20Checks/badge.svg)](https://github.com/yourusername/react-history-state/actions)
-[![codecov](https://codecov.io/gh/yourusername/react-history-state/branch/main/graph/badge.svg)](https://codecov.io/gh/yourusername/react-history-state)
+[![Tests](https://github.com/Hecris10/react-history-state/workflows/🔍%20Pull%20Request%20Checks/badge.svg)](https://github.com/Hecris10/react-history-state/actions)
+[![Security](https://github.com/Hecris10/react-history-state/workflows/🔒%20Security%20Checks/badge.svg)](https://github.com/Hecris10/react-history-state/actions)
+[![codecov](https://codecov.io/gh/Hecris10/react-history-state/branch/main/graph/badge.svg)](https://codecov.io/gh/Hecris10/react-history-state)
 ```
 
 ## 🚀 Release Process

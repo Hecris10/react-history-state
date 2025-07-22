@@ -19,6 +19,12 @@ document provides guidelines and patterns that all contributors should follow.
    git clone https://github.com/yourusername/react-history-state.git
    cd react-history-state
    ```
+
+   Or clone the main repository:
+   ```bash
+   git clone https://github.com/Hecris10/react-history-state.git
+   cd react-history-state
+   ```
 3. Install dependencies:
    ```bash
    pnpm install

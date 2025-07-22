@@ -10,9 +10,9 @@ updates:
       timezone: 'Etc/UTC'
     open-pull-requests-limit: 10
     reviewers:
-      - '@yourusername' # Replace with your GitHub username
+      - '@Hecris10'
     assignees:
-      - '@yourusername' # Replace with your GitHub username
+      - '@Hecris10'
     commit-message:
       prefix: 'deps'
       prefix-development: 'deps-dev'

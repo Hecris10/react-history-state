@@ -1,0 +1,26 @@
+# Global code owners - these users will be requested for review for all changes
+* @Hecris10
+
+# Core library files require maintainer approval
+/src/ @Hecris10
+/tests/ @Hecris10
+
+# Infrastructure files require admin review
+/.github/ @Hecris10
+/.github/workflows/ @Hecris10
+/package.json @Hecris10
+/pnpm-lock.yaml @Hecris10
+/tsconfig.json @Hecris10
+/rollup.config.js @Hecris10
+/.eslintrc.js @Hecris10
+
+# Documentation can be reviewed by any maintainer or trusted contributors
+/docs/ @Hecris10
+/README.md @Hecris10
+/CHANGELOG.md @Hecris10
+/examples/ @Hecris10
+
+# Governance files require careful review
+/.github/GOVERNANCE.md @Hecris10
+/.github/CODE_OF_CONDUCT.md @Hecris10
+/CONTRIBUTING.md @Hecris10
