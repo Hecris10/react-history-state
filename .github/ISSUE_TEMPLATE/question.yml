@@ -1,0 +1,58 @@
+name: ❓ Question
+description: Ask a question about usage or get help
+title: '[Question]: '
+labels: ['question', 'help wanted']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your question! Please provide as much detail as possible to help us assist you effectively.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: Please confirm before submitting
+      options:
+        - label: I have searched existing issues for similar questions
+          required: true
+        - label: I have read the documentation and examples
+          required: true
+        - label: I have tried to solve this myself first
+          required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know about react-history-state?
+      placeholder: How do I...? / Why does...? / Is it possible to...?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What are you trying to accomplish? Provide context about your use case.
+      placeholder: I'm building a... and I need to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: attempted
+    attributes:
+      label: What I've Tried
+      description: What have you already tried? Include any code examples.
+      render: typescript
+      placeholder: |
+        import { useHistoryState } from 'react-history-state';
+
+        // What I tried...
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Any other relevant information, links, or context
+      placeholder: Any additional details...
