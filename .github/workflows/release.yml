@@ -1,0 +1,237 @@
+name: 🚀 Release & Publish
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'examples/**'
+  release:
+    types: [published]
+
+# Ensure only one release runs at a time
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  # Comprehensive testing before release
+  test-before-release:
+    name: 🧪 Pre-Release Testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🏗️ Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔍 Run full quality checks
+        run: |
+          echo "🔍 Running linting..."
+          pnpm run lint
+          echo "🔧 Running type checking..."
+          pnpm run type-check
+          echo "🧪 Running tests with coverage..."
+          pnpm run test:coverage
+          echo "🏗️ Testing build..."
+          pnpm run build
+
+      - name: 📊 Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+
+  # Check if we should publish (only on release events or version bumps)
+  check-publish:
+    name: 🔍 Check If Should Publish
+    runs-on: ubuntu-latest
+    needs: test-before-release
+    outputs:
+      should-publish: ${{ steps.check.outputs.should-publish }}
+      version: ${{ steps.check.outputs.version }}
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: 🔍 Check if should publish
+        id: check
+        run: |
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            echo "should-publish=true" >> $GITHUB_OUTPUT
+            echo "version=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+            echo "🚀 Publishing because of release event"
+          else
+            # Check if package.json version changed
+            if git diff HEAD~1 HEAD --name-only | grep -q "package.json"; then
+              OLD_VERSION=$(git show HEAD~1:package.json | jq -r '.version')
+              NEW_VERSION=$(jq -r '.version' package.json)
+              if [[ "$OLD_VERSION" != "$NEW_VERSION" ]]; then
+                echo "should-publish=true" >> $GITHUB_OUTPUT
+                echo "version=v$NEW_VERSION" >> $GITHUB_OUTPUT
+                echo "🚀 Publishing because version changed: $OLD_VERSION -> $NEW_VERSION"
+              else
+                echo "should-publish=false" >> $GITHUB_OUTPUT
+                echo "⏭️ Skipping publish - no version change"
+              fi
+            else
+              echo "should-publish=false" >> $GITHUB_OUTPUT
+              echo "⏭️ Skipping publish - package.json not changed"
+            fi
+          fi
+
+  # Build and publish to npm
+  publish-npm:
+    name: 📦 Publish to NPM
+    runs-on: ubuntu-latest
+    needs: [test-before-release, check-publish]
+    if: needs.check-publish.outputs.should-publish == 'true'
+    environment: production
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🏗️ Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗️ Build for production
+        run: pnpm run build
+
+      - name: ✅ Verify package contents
+        run: |
+          echo "📋 Package contents:"
+          npm pack --dry-run
+          echo "📦 Built files:"
+          ls -la dist/
+
+      - name: 🔍 Check if version already published
+        id: check-version
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          if npm view "react-history-state@$VERSION" version 2>/dev/null; then
+            echo "version-exists=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Version $VERSION already exists on npm"
+          else
+            echo "version-exists=false" >> $GITHUB_OUTPUT
+            echo "✅ Version $VERSION is new"
+          fi
+
+      - name: 🚀 Publish to npm
+        if: steps.check-version.outputs.version-exists == 'false'
+        run: pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: 🏷️ Create Git tag
+        if: steps.check-version.outputs.version-exists == 'false' && github.event_name != 'release'
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag "v$VERSION"
+          git push origin "v$VERSION"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Create GitHub release if published from version bump
+  create-release:
+    name: 🏷️ Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [publish-npm, check-publish]
+    if: needs.publish-npm.result == 'success' && github.event_name != 'release'
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📝 Generate release notes
+        id: release-notes
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          echo "Generating release notes for v$VERSION"
+
+          # Extract changelog for this version
+          CHANGELOG=""
+          if [[ -f "CHANGELOG.md" ]]; then
+            CHANGELOG=$(awk "/^## \[?$VERSION\]?/{flag=1;next}/^## \[?[0-9]/{flag=0}flag" CHANGELOG.md || echo "")
+          fi
+
+          if [[ -z "$CHANGELOG" ]]; then
+            CHANGELOG="🚀 New release of react-history-state
+
+          ## What's Changed
+          - Updated to version $VERSION
+          - See commit history for detailed changes
+
+          ## Installation
+          \`\`\`bash
+          pnpm add react-history-state
+          # or
+          npm install react-history-state
+          \`\`\`
+
+          ## Usage
+          \`\`\`typescript
+          import { useHistoryState } from 'react-history-state';
+
+          const { state, setState, undo, redo } = useHistoryState('initial');
+          \`\`\`"
+          fi
+
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: 🏷️ Create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.check-publish.outputs.version }}
+          release_name: Release ${{ needs.check-publish.outputs.version }}
+          body: ${{ steps.release-notes.outputs.changelog }}
+          draft: false
+          prerelease: false
+
+  # Notify about successful release
+  notify-success:
+    name: 🎉 Release Complete
+    runs-on: ubuntu-latest
+    needs: [publish-npm, create-release, check-publish]
+    if: always() && needs.publish-npm.result == 'success'
+
+    steps:
+      - name: 🎉 Celebrate successful release
+        run: |
+          echo "🎉 Successfully released ${{ needs.check-publish.outputs.version }}!"
+          echo "📦 Package: https://www.npmjs.com/package/react-history-state"
+          echo "🏷️ Release: https://github.com/${{ github.repository }}/releases/tag/${{ needs.check-publish.outputs.version }}"
