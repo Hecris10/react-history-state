@@ -1,6 +1,6 @@
 # react-history-state
 
-[![npm version](https://badge.fury.io/js/react-history-state.svg)](https://www.npmjs.com/package/react-history-state)
+[![npm version](https://badge.fury.io/js/react-state-history.svg)](https://www.npmjs.com/package/react-state-history)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
