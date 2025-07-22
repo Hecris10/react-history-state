@@ -1,4 +1,4 @@
-# react-history-state
+# react-state-history
 
 [![npm version](https://badge.fury.io/js/react-state-history.svg)](https://www.npmjs.com/package/react-state-history)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
