@@ -17,7 +17,7 @@ import { createHistoryManager } from '../utils';
  */
 export function useHistoryState<T>(
   initialState: T,
-  options: StateHistoryOptions = {}
+  options: StateHistoryOptions<T> = {}
 ): StateHistoryResult<T> {
   // Validate options
   if (options.maxHistory !== undefined && options.maxHistory < 1) {
@@ -28,7 +28,7 @@ export function useHistoryState<T>(
     throw new Error('debounceMs must be a non-negative number');
   }
 
-  const { maxHistory = 50, debounceMs = 0, enableRedo = true } = options;
+  const { maxHistory = 50, debounceMs = 0, enableRedo = true, onValueChange } = options;
 
   // Initialize history manager
   const historyManager = useMemo(
@@ -55,13 +55,19 @@ export function useHistoryState<T>(
         debounceRef.current = setTimeout(() => {
           const newState = historyManager.setState(newValue);
           setHistoryState(newState);
+          if (onValueChange) {
+            onValueChange(newValue);
+          }
         }, debounceMs);
       } else {
         const newState = historyManager.setState(newValue);
         setHistoryState(newState);
+        if (onValueChange) {
+          onValueChange(newValue);
+        }
       }
     },
-    [historyManager, historyState, debounceMs]
+    [historyManager, historyState, debounceMs, onValueChange]
   );
 
   const undo = useCallback(() => {
